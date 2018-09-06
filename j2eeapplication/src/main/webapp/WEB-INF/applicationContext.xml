@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<import resource="datasource-config.xml" />
+	<import resource="webflow-config.xml" />	
+	<import resource="security-config.xml" />
+	
+	<!-- ************************************* USER *************************************** -->
+	<!-- DAO declarations -->
+	<bean id="userDao" class="com.example.j2eeapp.dao.UserJpaDao" />
+	
+	<!-- Services declarations -->
+	<bean id="userService" class="com.example.j2eeapp.services.impl.UserServiceImpl">
+		<property name="userDao" ref="userDao" />
+	</bean>
+
+	<bean id="userAuthenticationProviderService" class="com.example.j2eeapp.services.impl.UserAuthenticationProviderServiceImpl">
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+	
+	<!-- ************************************* AGENCE *************************************** -->
+	
+	
+	<!-- in the applicationContext.xml file, we have to create our beans (dao/service) to use in the view 
+	so we declare the Dao/service using the impleamentation class
+	since the service use the doa layer, so we need to declare it as a property-->
+	
+	<bean id="agenceDao" class="com.example.j2eeapp.dao.AgenceJpaDao"/>
+	
+	<bean id="agenceService" class="com.example.j2eeapp.services.impl.AgenceServiceImpl">
+		<property name="agenceDao" ref="agenceDao"/>
+	</bean>
+	
+	<bean id="agenceConverter" class="com.example.j2eeapp.ui.utils.AgenceConverter">
+		<property name="agenceDao" ref="agenceDao"/>
+	</bean>
+
+	<!-- ************************************* CUSTOMER *************************************** -->
+
+	<bean id="customerDao" class="com.example.j2eeapp.dao.CustomerJpaDao"/>
+
+	<bean id="customerService" class="com.example.j2eeapp.services.impl.CustomerServiceImpl">
+		<property name="customerDao" ref="customerDao"/>
+	</bean>
+
+
+	<!-- ************************************* MEETINGS *************************************** -->
+
+	<bean id="meetingsDao" class="com.example.j2eeapp.dao.MeetingsJpaDao"/>
+
+	<bean id="meetingsService" class="com.example.j2eeapp.services.impl.MeetingsServicImpl">
+		<property name="meetingsDao" ref="meetingsDao"/>
+	</bean>
+
+
+	<!-- ************************************* AGENT *************************************** -->
+
+	<bean id="agentDao" class="com.example.j2eeapp.dao.AgentJpaDao"/>
+
+	<bean id="agentService" class="com.example.j2eeapp.services.impl.AgentServiceImpl">
+		<property name="agentDao" ref="agentDao"/>
+	</bean>
+</beans>

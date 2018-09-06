@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/general.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="Ajout Agence" />
+	</ui:define>
+
+
+	<ui:define name="content">
+		<h:form id="AjoutCltForm" styleClass="form-material">
+			<p:dataTable id="agenceTable" var="a" value="#{agenceList}">
+			
+				<p:column headerText="Name">
+					<h:outputText value="#{a.name}" />
+				</p:column>
+			
+				<p:column headerText="Adress">
+					<h:outputText value="#{a.adress}" />
+				</p:column>
+			
+				<p:column headerText="Region">
+					<h:outputText value="#{a.region}" />
+				</p:column>
+			
+				<p:column headerText="Telephone">
+					<h:outputText value="#{a.tel}" />
+				</p:column>
+			
+			
+				<p:column headerText="Action">
+				
+					<p:commandLink action="update" ajax="false">
+						<f:setPropertyActionListener value="#{a}" target="#{agence.selected}"/>
+						<i class="fa fa-pencil"></i>			
+					</p:commandLink>
+					<p:spacer width="15"/>
+					<p:commandLink update="agenceTable" action="delete" ajax="false">
+						<f:setPropertyActionListener value="#{a}" target="#{agence.selected}"/>
+						<i class="fa fa-trash"></i>	
+					</p:commandLink>
+					
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

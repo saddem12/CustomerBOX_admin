@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<secured attributes="ROLE_USER"/>
+	
+	<var name="uiUtils" class="com.example.j2eeapp.ui.utils.UIUtils"/>
+
+ 
+ 
+	<on-start>
+		<evaluate expression="userService.loadUserEntityByUsername(currentUser.name)" result="flowScope.user" />
+		<evaluate expression="meetingsService.findByStatus()" />
+	</on-start>
+
+	<view-state id="home" view="accountHome.xhtml">
+	</view-state>
+	
+	<view-state id="signUp" view="signUp.xhtml">
+		<var name="user" class="com.example.j2eeapp.domain.UserEntity"/>
+		<transition on="confirmSignUp" to="home">
+			<evaluate expression="userService.createUser(user)" />
+		</transition>
+	</view-state>
+	
+	
+	<!-- ************************************************ Agence ************************************************ -->
+	
+			
+
+	<view-state id="AddAgence" view="Agence/AddAgence.xhtml">
+		<var name="agence" class="com.example.j2eeapp.domain.AgenceEntity"/>
+		<transition on="confirmAdd" to="ManagementAgence" >
+			<evaluate expression="agenceService.createAgence(agence)"/>
+		</transition>
+	</view-state>
+	
+	<action-state id="AddA">
+		<evaluate expression="agenceService.createAgence(AgenceToAdd)" />
+		<transition on="yes" to="ManagementAgence" />
+		<transition on="no" to="addAgence" />
+	</action-state>
+	
+	<view-state id="ManagementAgence" view="Agence/ManagementAgence.xhtml">
+		<var name="agence" class="com.example.j2eeapp.domain.AgenceEntity"/>
+		<on-render>
+			<evaluate expression="agenceService.findAll()" result="flowScope.agenceList"/>
+		</on-render>
+		<transition on="delete">
+			<evaluate expression="agenceService.deleteAgence(agence.selected)"/>
+		</transition>
+		<transition on="update" to="UpdateAgence">
+			<set name="flowScope.selectedAgence" value="agence.selected"/>
+		</transition>
+	</view-state>
+	
+	<view-state id="UpdateAgence" view="Agence/UpdateAgence.xhtml">
+		<transition on="confirmUpdate" to="ManagementAgence">
+			<evaluate expression="agenceService.updateAgence(selectedAgence)"/>
+		</transition>
+	</view-state>
+
+
+<!-- ************************************************ Customer ************************************************ -->
+
+
+	<view-state id="addCustomer" view="Customer/AddCustomer.xhtml">
+		<var name="customer" class="com.example.j2eeapp.domain.CustomerEntity"/>
+		<transition on="confirmAdd" to="AddCus">
+			<set name="flowScope.CustomerToAdd" value="customer"/>			
+		</transition>
+	</view-state>
+	
+	
+	<action-state id="AddCus">
+		<evaluate expression="customerService.createCustomer(CustomerToAdd)" />
+		<transition on="yes" to="ManagementCustomer" />
+		<transition on="no" to="addCustomer" />
+	</action-state>
+	
+	<view-state id="ManagementCustomer" view="Customer/ManagementCustomer.xhtml">
+		<var name="customer" class="com.example.j2eeapp.domain.CustomerEntity"/>
+		<on-render>
+			<evaluate expression="customerService.findAll()" result="flowScope.customerList"/>
+		</on-render>
+		<transition on="delete">
+			<evaluate expression="customerService.deleteCustomer(customer.selected)"/>
+		</transition>	
+		<transition on="update" to="UpdateCustomer">
+			<set name="flowScope.selectedCustomer" value="customer.selected"/>
+		</transition>
+	</view-state>
+	
+	<view-state id="UpdateCustomer" view="Customer/UpdateCustomer.xhtml">
+		<transition on="confirmUpdate" to="ManagementCustomer">
+			<evaluate expression="customerService.updateCustomer(selectedCustomer)"/>
+		</transition>
+	</view-state>
+	
+	
+
+<!-- ********************************************* Agent *************************************************** -->
+
+
+
+	<view-state id="addAgent" view="Agent/AddAgent.xhtml">
+		<var name="agent" class="com.example.j2eeapp.domain.AgentEntity"/>
+		<transition on="confirmAdd" to="AddAgt">
+			<set name="flowScope.AgentToAdd" value="agent"/>			
+		</transition>
+	</view-state>
+	
+	<action-state id="AddAgt">
+		<evaluate expression="agentService.createAgent(AgentToAdd)" />
+		<transition on="yes" to="ManagementAgent" />
+		<transition on="no" to="addAgent" />
+	</action-state>
+
+	<view-state id="ManagementAgent" view="Agent/ManagementAgent.xhtml">
+		<var name="agent" class="com.example.j2eeapp.domain.AgentEntity"/>
+		<on-render>
+			<evaluate expression="agentService.findAll()" result="flowScope.agentList"/>
+		</on-render>
+		<transition on="delete">
+			<evaluate expression="agentService.deleteAgent(agent.selected)"/>
+		</transition>	
+		<transition on="update" to="UpdateAgent">
+			<set name="flowScope.selectedAgent" value="agent.selected"/>
+		</transition>
+	</view-state>
+	
+	<view-state id="UpdateAgent" view="Agent/UpdateAgent.xhtml">
+		<transition on="confirmUpdate" to="ManagementAgent">
+			<evaluate expression="agentService.updateAgent(selectedAgent)"/>
+		</transition>
+	</view-state>
+	
+	
+
+<!-- ********************************************* Agent *************************************************** -->
+	
+
+	<view-state id="meetingsList" view="History.xhtml">
+		<var name="meetings" class="com.example.j2eeapp.domain.MeetingsEntity"/>
+		<transition on="search">
+			<evaluate expression="meetingsService.search(meetings.search)"/>
+		</transition>
+		<transition on="reset">
+			<evaluate expression="meetingsService.findByStatus()" />
+		</transition>
+	</view-state>
+
+
+	<global-transitions>
+		<transition on="ajouterEqBtn" to="AddAgence"/>
+		<transition on="gererEq" to="ManagementAgence"/>
+		<transition on="addCustomerBtn" to="addCustomer"/>
+		<transition on="gererCustomer" to="ManagementCustomer"/>
+		<transition on="gererAgent" to="ManagementAgent"/>
+		<transition on="aaaaa" to="addAgent"/>
+		<transition on="meetingsList" to="meetingsList"/>
+	</global-transitions>
+
+</flow>
